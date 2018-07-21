@@ -1,5 +1,12 @@
+const FIRST_USER_TOKEN = 'first';
+const SECOND_USER_TOKEN = 'second';
+const PLAYER1 = 'player_1';
+const PLAYER2 = 'player_2';
+var finished = false;
+var started = false;
 var move_number = 1;
 var current_number;
+var winner = null;
 
 /**
  * should go to helper function
@@ -28,7 +35,7 @@ module.exports.move = async function(data) {
 
   data = data || {};
 
-  var token = 'first';
+  var token = FIRST_USER_TOKEN;
   var number = data.number;
 
   if (current_number === 1) {
@@ -44,7 +51,7 @@ module.exports.move = async function(data) {
   }
 
   if (move_number % 2 === 0) {
-    token = 'second';
+    token = SECOND_USER_TOKEN;
   }
 
   if (move_number >= 3 && data.token !== token) {
@@ -68,8 +75,17 @@ module.exports.move = async function(data) {
 
   current_number = resulting_number;
 
+  if (resulting_number === 1) {
+    finished = true;
+
+    winner = move_number % 2 === 1 ? PLAYER1 : PLAYER2;
+  }
+
   // when move is finished - increase a number
   ++move_number;
+
+  started = true;
+
 
   return {
     token: token,
@@ -82,9 +98,24 @@ module.exports.move = async function(data) {
 
 module.exports.status = async function(data) {
 
+  var whose_move = null;
+
+  if (!finished) {
+    whose_move = move_number % 2 === 1 ? PLAYER1 : PLAYER2
+  }
+
+  return {
+    started: started,
+    finished: finished,
+    move_number: move_number - 1,
+    whose_move: whose_move,
+    winner: winner
+  }
 }
 
 module.exports.new_game = async function(data) {
   move_number = 1;
   current_number = undefined;
+  started = false;
+  finished = false;
 }

@@ -1,6 +1,6 @@
 # Simple 2-players game
 
-This game is only a technical challenge. It was created for educational purposes. I recommend playing chess or go if you want to have more fun.
+This game is only a technical challenge. It was created for educational purposes.
 
 ## Requirements
 
@@ -34,6 +34,6 @@ curl -XPOST -H "Content-Type: application/json" -d '{"number":0}' http://localho
 
 ## Notes
 
-- didn't use a code linter
-- all functions are async / await in order to easy switch to async functions
+- This app is not having linter for code checking. It would be a good practice if working with more people
+- All functions are async / await even if most of them are synchronous. It was done in order to easy switch to async functions (MongoDB, PSQL, Redis, etc)
 

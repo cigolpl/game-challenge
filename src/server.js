@@ -43,11 +43,9 @@ app.post('/move', async function(req, res) {
  */
 app.get('/status', async function(req, res) {
 
-  await service.status(req.body);
+  var status = await service.status();
 
-  return res.json({
-    active: false
-  })
+  return res.json(status);
 })
 
 module.exports = app;
