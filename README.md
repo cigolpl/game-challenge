@@ -33,7 +33,7 @@ curl -XPOST -H "Content-Type: application/json" http://localhost:3000/new_game
 
 ```bash
 # It's responsible for a player move
-curl -XPOST -H "Content-Type: application/json" http://localhost:3000/move
+curl -XPOST -H "Content-Type: application/json" -d '{"number":60,"token":"token"}' http://localhost:3000/move
 ```
 
 POST body params:
@@ -48,11 +48,7 @@ curl -XGET -H "Content-Type: application/json" http://localhost:3000/status
 
 ## Example game
 
-```bash
-curl -XPOST -H "Content-Type: application/json" http://localhost:3000/new_game
-curl -XPOST -H "Content-Type: application/json" -d '{"number":60}' http://localhost:3000/move
-curl -XPOST -H "Content-Type: application/json" -d '{"number":0}' http://localhost:3000/move
-```
+Please check `tests/apiSpec.js` with game scenario
 
 ## Notes
 

@@ -59,4 +59,123 @@ describe('api', function() {
       done();
     });
   })
+
+  it('makes a move by a second player', function test(done) {
+
+    request
+    .post(`http://localhost:${PORT}/move`)
+    .send({
+      number: 1
+    })
+    .end((err, res) => {
+      assert.equal(200, res.statusCode);
+      assert.equal(1, res.body.added_number);
+      assert.equal(7, res.body.resulting_number);
+      assert.equal(2, res.body.move_number);
+      assert.ok(typeof res.body.token === 'string');
+      done();
+    });
+  })
+
+  it('makes a incorrect move by a first player', function test(done) {
+
+    request
+    .post(`http://localhost:${PORT}/move`)
+    .send({
+      number: 3
+    })
+    .end((err, res) => {
+      assert.equal(400, res.statusCode);
+      done();
+    });
+  })
+
+  it('returns an error because of not providing token', function test(done) {
+
+    request
+    .post(`http://localhost:${PORT}/move`)
+    .send({
+    })
+    .end((err, res) => {
+      assert.equal(400, res.statusCode);
+      done();
+    });
+  })
+
+  it('makes a correct move by a first player', function test(done) {
+
+    request
+    .post(`http://localhost:${PORT}/move`)
+    .send({
+      token: 'first'
+    })
+    .end((err, res) => {
+      assert.equal(200, res.statusCode);
+      assert.equal(-1, res.body.added_number);
+      assert.equal(2, res.body.resulting_number);
+      assert.equal(3, res.body.move_number);
+      done();
+    });
+  })
+
+  it('returns an error once user wants to make 2 moves in a row', function test(done) {
+
+    request
+    .post(`http://localhost:${PORT}/move`)
+    .send({
+      token: 'first'
+    })
+    .end((err, res) => {
+      assert.equal(400, res.statusCode);
+      done();
+    });
+  })
+
+
+  it('makes a correct / winning move by a second player', function test(done) {
+
+    request
+    .post(`http://localhost:${PORT}/move`)
+    .send({
+      token: 'second'
+    })
+    .end((err, res) => {
+      assert.equal(200, res.statusCode);
+      assert.equal(1, res.body.added_number);
+      assert.equal(1, res.body.resulting_number);
+      assert.equal(4, res.body.move_number);
+      assert.equal(true, res.body.is_win);
+      done();
+    });
+  })
+
+  it('returns an error once player want to play finished game', function test(done) {
+
+    request
+    .post(`http://localhost:${PORT}/move`)
+    .send({
+      token: 'first'
+    })
+    .end((err, res) => {
+      assert.equal(400, res.statusCode);
+      done();
+    });
+  })
+
+  it('checks a finished game status', function test(done) {
+
+    request
+    .get(`http://localhost:${PORT}/status`)
+    .send({
+      token: 'second'
+    })
+    .end((err, res) => {
+      assert.equal(200, res.statusCode);
+      assert.equal(true, res.body.started);
+      assert.equal(true, res.body.finished);
+      assert.equal(null, res.body.whose_move);
+      assert.equal(4, res.body.move_number);
+      done();
+    });
+  })
 })
