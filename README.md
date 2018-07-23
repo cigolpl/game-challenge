@@ -24,16 +24,45 @@ docker build -t game-challenge -f Dockerfile .
 docker run -it -p 3000:3000 game-challenge
 ```
 
-## Example game
+## Endpoints
 
 ```bash
+# Starting a new game and resetting all previous settings
 curl -XPOST -H "Content-Type: application/json" http://localhost:3000/new_game
-curl -XPOST -H "Content-Type: application/json" -d '{"number":60}' http://localhost:3000/move
-curl -XPOST -H "Content-Type: application/json" -d '{"number":0}' http://localhost:3000/move
 ```
+
+```bash
+# It's responsible for a player move
+curl -XPOST -H "Content-Type: application/json" -d '{"number":60,"token":"token"}' http://localhost:3000/move
+```
+
+POST body params:
+
+- `number` (it's required in first move but optional later)
+- `token` (it's generated in first player move but required in next moves)
+
+```bash
+# It's returning game status (is game started, whose move, etc)
+curl -XGET -H "Content-Type: application/json" http://localhost:3000/status
+```
+
+## Example game
+
+Please check `tests/apiSpec.js` with game scenario
 
 ## Notes
 
-- This app is not having linter for code checking. It would be a good practice if working with more people
+- This app is not having linter for code checking. It would be a good practice though if working with more people
 - All functions are async / await even if most of them are synchronous. It was done in order to easy switch to async functions (MongoDB, PSQL, Redis, etc)
+- The input from user is not validated / checked. At this stage we believe external input to be correct
+- Users are receiving generated token in their first moves. Token is required in next moves to be authenticated.  
 
+## Tests
+
+```
+# Run all tests
+npm test
+
+# Run specific test
+NODE_ENV=test mocha -b --exit tests/apiSpec.js
+```

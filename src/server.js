@@ -24,10 +24,11 @@ app.post('/new_game', async function(req, res) {
 
 app.post('/move', async function(req, res) {
 
-  // parse number
+  var body = req.body;
+  body.number = body.number ? parseInt(body.number) : body.number;
 
-  // we trust a user input here
-  await service.move(req.body)
+  // we trust a user input at this stage of game development
+  await service.move(body)
   .then(result => {
     res.status(200).json(result);
   })
@@ -44,7 +45,6 @@ app.post('/move', async function(req, res) {
 app.get('/status', async function(req, res) {
 
   var status = await service.status();
-
   return res.json(status);
 })
 
