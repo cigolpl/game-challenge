@@ -32,6 +32,28 @@ describe('game logic', function() {
       }
     })
 
+    it('throws an error with exact message once first user wants to make 2 moves in row', async function test() {
+
+      await service.new_game();
+
+      // first move
+      await service.move({
+        number: 100
+      })
+
+      // first move of second player
+      await service.move()
+
+      try {
+        await service.move({
+          token: 'second'
+        })
+        throw new Error()
+      } catch (e) {
+        assert.equal('Its a another player move now', e.message);
+      }
+    })
+
     it('makes automatic move if number not provided in second move', async function test() {
 
       await service.new_game();

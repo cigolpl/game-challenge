@@ -50,7 +50,11 @@ module.exports.move = async function(data) {
   }
 
   if (move_number >= 3 && data.token !== token) {
-    throw new Error('Please provide a correct token to continue a game');
+    if ([FIRST_USER_TOKEN, SECOND_USER_TOKEN].indexOf(data.token) !== -1) {
+      throw new Error('Its a another player move now');
+    } else {
+      throw new Error('Please provide a correct token to continue a game');
+    }
   }
 
   if (!number && number !== 0) {
