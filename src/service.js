@@ -22,11 +22,6 @@ module.exports.calculateMoveNumber = function(a) {
   return map[a % 3];
 }
 
-module.exports.getCounter = async function() {
-
-  return move_number;
-}
-
 /**
  * main module responsible for game logic
  * the game states are stored in memory
